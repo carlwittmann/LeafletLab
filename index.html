@@ -61,6 +61,10 @@ function drawMeteorites(){
           
         }
       }
+  
+closestPoint = null;
+let closestDist = Infinity;
+  
   for (let i = 0; i < meteorites2.getRowCount(); i++){
         const latitude = Number(meteorites2.getString(i, 'reclat'));
         const longitude = Number (meteorites2.getString(i, 'reclong'));
@@ -76,13 +80,24 @@ function drawMeteorites(){
             ellipse(pos.x, pos.y, size, size);
             noStroke();
 
+        const d = dist(mouseX, mouseY, pos.x, pos.y);
+        if (d < 20  && (!closestPoint || d < closestDist)) {
+          closestPoint = {name, mass, x: pos.x, y: pos.y};
+          closestDist = d;
+        }
+        if (closestPoint) {
+        fill(255);
+        text(closestPoint.name + " (" + closestPoint.mass + " grams)", closestPoint.x, closestPoint.y);
+      }  
+    }
+        }
+
             // const d = dist(mouseX, mouseY, pos.x, pos.y);
             // if (d < 20) {
             //   fill(255);
             //   text(name + " (" + mass + " grams)", pos.x, pos.y);
             // }   
-          }
-        }
+         
 for (let i = 0; i < meteorites3.getRowCount(); i++){
           const latitude = Number(meteorites3.getString(i, 'reclat'));
           const longitude = Number (meteorites3.getString(i, 'reclong'));
@@ -95,33 +110,61 @@ for (let i = 0; i < meteorites3.getRowCount(); i++){
               ellipse(pos.x, pos.y, size, size);
             }
           }
+
+
+
+// for (let i = 0; i < meteorites2.getRowCount(); i++) {
+//   const latitude = meteorites2.getNum(i, 'reclat');
+//   const longitude = meteorites2.getNum(i, 'reclong');
+//   const name = meteorites2.getString(i, 'name');
+//   const mass = meteorites2.getString(i, 'mass (g)');
+
+//   if (myMap.map.getBounds().contains({lat: latitude, lng: longitude})) {
+//     const pos = myMap.latLngToPixel(latitude, longitude);
+//     let size = meteorites2.getString(i, 'mass (g)');
+//     size = map(size, 558, 60000000, 1, 25) + myMap.zoom();
+//     fill(250, 166, 19, 30);
+//     ellipse(pos.x, pos.y, size, size);
+//     noStroke();
+
+//     const d = dist(mouseX, mouseY, pos.x, pos.y);
+//     if (d < 20 && (!closestPoint || d < closestDist)) {
+//       closestPoint = {name, mass, x: pos.x, y: pos.y};
+//       closestDist = d;
+//     }
+//   }
+// }
+
+        
     }
 
-    function mouseClicked() {
-      clear();
-  for (let i = 0; i < meteorites2.getRowCount(); i++) {
-    const latitude = Number(meteorites2.getString(i, 'reclat'));
-    const longitude = Number(meteorites2.getString(i, 'reclong'));
-    const name = meteorites2.getString(i, 'name');
-    const year = meteorites2.getString(i, 'year');
-    const mass = Number(meteorites1.getString(i, 'mass (g)'));
+
+
+//     function mouseClicked() {
+//       clear();
+//   for (let i = 0; i < meteorites2.getRowCount(); i++) {
+//     const latitude = Number(meteorites2.getString(i, 'reclat'));
+//     const longitude = Number(meteorites2.getString(i, 'reclong'));
+//     const name = meteorites2.getString(i, 'name');
+//     const year = meteorites2.getString(i, 'year');
+//     const mass = Number(meteorites1.getString(i, 'mass (g)'));
   
-    if (myMap.map.getBounds().contains({lat: latitude, lng: longitude})) {
-      const pos = myMap.latLngToPixel(latitude, longitude);
-      let size = meteorites2.getString(i, 'mass (g)');
-      size = map(size, 558, 60000000, 1, 25) + myMap.zoom();
-      fill(250, 166, 19, 30);
-      ellipse(pos.x, pos.y, size, size);
-      noStroke();
+//     if (myMap.map.getBounds().contains({lat: latitude, lng: longitude})) {
+//       const pos = myMap.latLngToPixel(latitude, longitude);
+//       let size = meteorites2.getString(i, 'mass (g)');
+//       size = map(size, 558, 60000000, 1, 25) + myMap.zoom();
+//       fill(250, 166, 19, 30);
+//       ellipse(pos.x, pos.y, size, size);
+//       noStroke();
 
-      const d = dist(mouseX, mouseY, pos.x, pos.y);
-      if (d < 10) {
-        fill(255);
-        text(name + " (" + mass + " grams)", pos.x, pos.y);
-      }
-    }
-  }
-}
+//       const d = dist(mouseX, mouseY, pos.x, pos.y);
+//       if (d < 10) {
+//         fill(255);
+//         text(name + " (" + mass + " grams)", pos.x, pos.y);
+//       }
+//     }
+//   }
+// }
   </script>
   <!-- <script src="LEAFLETLAB.js"></script> -->
 </body>
