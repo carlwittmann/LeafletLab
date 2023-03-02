@@ -7,42 +7,98 @@ const mappa = new Mappa('Leaflet');
 
 // Consolidate map options
 const options = {
-  lat: 0,
-  lng: 0,
-  zoom: 4,
-  style: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}.png"
+  lat: 49.2827,
+  lng: -123.1207,
+  zoom: 3,
+  style: "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
 }
 
+
 function setup(){
-  canvas = createCanvas(640,640); 
+  canvas = createCanvas(1080,740); 
   myMap = mappa.tileMap(options)
   myMap.overlay(canvas);
-  fill(200, 100, 100);
-  //myMap.onChange(drawPoint);
 
-  meteorites = loadTable('Meteorite_Landings.csv', 'csv', 'header');
+
+// CSV files
+  meteorites1 = loadTable('Meteorite_Landings.csv', 'csv', 'header');
+  meteorites2 = loadTable('Meteorite_Landings.csv', 'csv', 'header');
+  meteorites3 = loadTable('Meteorite_Landings.csv', 'csv', 'header');
   myMap.onChange(drawMeteorites);
-  fill(70, 203,31); 
-  stroke(100);
 }
 
 function draw(){
 }
 
-function drawMeteorites(){
-    clear();
-    for (let i = 0; i < meteorites.getRowCount(); i++){
-        const latitude = Number(meteorites.getString(i, 'reclat'));
-        const longitude = Number (meteorites.getString(i, 'reclong'));
 
-        if (myMap.map.getBounds().contains({lat: latitude, lng: longitude})) {
-            const pos = myMap.latLngToPixel(latitude, longitude);
-            let size = meteorites.getString(i, 'mass (g)');
-            size = map(size, 558, 60000000, 1, 25) + myMap.zoom();
-            ellipse(pos.x, pos.y, size, size);
-          }
+
+function drawMeteorites(){
+  clear();
+  for (let i = 0; i < meteorites1.getRowCount(); i++){
+      const latitude = Number(meteorites1.getString(i, 'reclat'));
+      const longitude = Number (meteorites1.getString(i, 'reclong'));
+      const mass = Number(meteorites1.getString(i, 'mass (g)'));
+
+      if (mass >= 1000000 && myMap.map.getBounds().contains({lat: latitude, lng: longitude})) {
+          const pos = myMap.latLngToPixel(latitude, longitude);
+          let size = meteorites1.getString(i, 'mass (g)');
+          size = map(size, 558, 60000000, 1, 25) + myMap.zoom();
+          noFill();
+          stroke(255, 0, 0, 75);
+          strokeWeight(1);
+          ellipse(pos.x, pos.y, size, size);
+          
         }
       }
+  for (let i = 0; i < meteorites2.getRowCount(); i++){
+        const latitude = Number(meteorites2.getString(i, 'reclat'));
+        const longitude = Number (meteorites2.getString(i, 'reclong'));
+        const name = meteorites1.getString(i, 'name');
+        const mass = Number(meteorites1.getString(i, 'mass (g)'));
+  
+        if (myMap.map.getBounds().contains({lat: latitude, lng: longitude})) {
+            const pos = myMap.latLngToPixel(latitude, longitude);
+            let size = meteorites2.getString(i, 'mass (g)');
+            size = map(size, 558, 60000000, 1, 25) + myMap.zoom();
+            fill(222, 249, 227, 10);
+            ellipse(pos.x, pos.y, size, size);
+            noStroke();
+
+            const d = dist(mouseX, mouseY, pos.x, pos.y);
+            if (d < 10) {
+              fill(255);
+              text(name, mouseX + 10, mouseY);
+            }   
+          }
+        }
+for (let i = 0; i < meteorites3.getRowCount(); i++){
+          const latitude = Number(meteorites3.getString(i, 'reclat'));
+          const longitude = Number (meteorites3.getString(i, 'reclong'));
+    
+          if (myMap.map.getBounds().contains({lat: latitude, lng: longitude})) {
+              const pos = myMap.latLngToPixel(latitude, longitude);
+              let size = meteorites3.getString(i, 'mass (g)');
+              size = 1;
+              fill(255, 255, 255, 150);
+              ellipse(pos.x, pos.y, size, size);
+            }
+          }
+    }
+
+// function drawMeteorites(){
+//     clear();
+//     for (let i = 0; i < meteorites.getRowCount(); i++){
+//         const latitude = Number(meteorites.getString(i, 'reclat'));
+//         const longitude = Number (meteorites.getString(i, 'reclong'));
+
+//         if (myMap.map.getBounds().contains({lat: latitude, lng: longitude})) {
+//             const pos = myMap.latLngToPixel(latitude, longitude);
+//             let size = meteorites.getString(i, 'mass (g)');
+//             size = map(size, 558, 60000000, 1, 25) + myMap.zoom();
+//             ellipse(pos.x, pos.y, size, size);
+//           }
+//         }
+//       }
       
 
 // function drawPoint(){
